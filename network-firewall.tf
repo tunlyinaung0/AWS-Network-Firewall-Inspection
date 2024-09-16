@@ -52,7 +52,7 @@ resource "aws_networkfirewall_firewall_policy" "policy" {
         stateless_fragment_default_actions = ["aws:drop"]
         stateless_rule_group_reference {
             priority = 10
-            resource_arn = aws_network_firewall_rule_group.rule-group.arn
+            resource_arn = aws_networkfirewall_rule_group.rule-group.arn
         }
     }
 
@@ -78,7 +78,11 @@ resource "aws_networkfirewall_firewall" "firewall" {
         ip_address_type = "IPV4"
     }
 
+    tags = {
+        Name = "Network-Firewall"
+    }
 
+ 
 }
 
 data "aws_vpc_endpoint" "gwlbe1" {
