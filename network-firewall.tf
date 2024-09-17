@@ -21,19 +21,19 @@ resource "aws_networkfirewall_rule_group" "rule-group" {
                                 address_definition = "0.0.0.0/0"
                             }
 
-                            source_port {
-                                from_port = 0
-                                to_port = 65535
-                            }
+                            # source_port {
+                            #     from_port = 0
+                            #     to_port = 65535
+                            # }
 
                             destination {
                                 address_definition = "0.0.0.0/0"
                             }
 
-                            destination_port {
-                                from_port = 0
-                                to_port = 65535
-                            }
+                            # destination_port {
+                            #     from_port = 0
+                            #     to_port = 65535
+                            # }
 
                             protocols = []
                         }
@@ -48,7 +48,7 @@ resource "aws_networkfirewall_rule_group" "rule-group" {
 resource "aws_networkfirewall_firewall_policy" "policy" {
     name = "${var.prefix}-policy"
     firewall_policy {
-        stateless_default_actions = ["aws:foward_to_sfe"]
+        stateless_default_actions = ["aws:forward_to_sfe"]
         stateless_fragment_default_actions = ["aws:drop"]
         stateless_rule_group_reference {
             priority = 10
