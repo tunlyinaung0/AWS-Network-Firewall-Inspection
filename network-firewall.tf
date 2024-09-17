@@ -18,7 +18,7 @@ resource "aws_networkfirewall_rule_group" "rule-group" {
 
                         match_attributes {
                             source {
-                                address_definition = "ANY"
+                                address_definition = "0.0.0.0/0"
                             }
 
                             source_port {
@@ -27,7 +27,7 @@ resource "aws_networkfirewall_rule_group" "rule-group" {
                             }
 
                             destination {
-                                address_definition = "ANY"
+                                address_definition = "0.0.0.0/0"
                             }
 
                             destination_port {
@@ -68,14 +68,26 @@ resource "aws_networkfirewall_firewall" "firewall" {
     vpc_id = aws_vpc.main.id
     subnet_change_protection = true
 
-    subnet_mapping {
-        subnet_id = aws_subnet.firewall-subnet-a.id
-        ip_address_type = "IPV4"
-    }
+    # subnet_mapping {
+    #     subnet_id = aws_subnet.firewall-subnet-a.id
+    #     ip_address_type = "IPV4"
+    # }
     
-    subnet_mapping {
-        subnet_id = aws_subnet.firewall-subnet-b.id
-        ip_address_type = "IPV4"
+    # subnet_mapping {
+    #     subnet_id = aws_subnet.firewall-subnet-b.id
+    #     ip_address_type = "IPV4"
+    # }
+
+    dynamic "subnet_mapping" {
+    for_each = [
+      aws_subnet.firewall-subnet-a.id,
+      aws_subnet.firewall-subnet-b.id
+    ]
+
+    content {
+      subnet_id = subnet_mapping.value
+    }
+
     }
 
     tags = {
@@ -83,14 +95,4 @@ resource "aws_networkfirewall_firewall" "firewall" {
     }
 
  
-}
-
-data "aws_vpc_endpoint" "gwlbe1" {
-    vpc_id = aws_vpc.main.id
-    service_name = aws_networkfirewall_firewall.firewall.firewall_status[0].synced_state[aws_subnet.firewall-subnet-a].attachment.endpoint_id
-}
-
-data "aws_vpc_endpoint" "gwlbe2" {
-    vpc_id = aws_vpc.main.id
-    service_name = aws_networkfirewall_firewall.firewall.firewall_status[0].synced_state[aws_subnet.firewall-subnet-b].attachment.endpoint_id
 }

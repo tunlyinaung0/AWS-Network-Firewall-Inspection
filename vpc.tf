@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_subnet" "server-subnet-a" {
     vpc_id = aws_vpc.main.id
     cidr_block = var.server-subnet-a
-    availability_zone = "us-east-1a"
+    availability_zone = var.az1
 
     tags = {
         Name = "server-subnet-a"
@@ -30,7 +30,7 @@ resource "aws_subnet" "server-subnet-a" {
 resource "aws_subnet" "server-subnet-b" {
     vpc_id = aws_vpc.main.id
     cidr_block = var.server-subnet-b
-    availability_zone = "us-east-1b"
+    availability_zone = var.az2
 
     tags = {
         Name = "server-subnet-b"
@@ -40,7 +40,7 @@ resource "aws_subnet" "server-subnet-b" {
 resource "aws_subnet" "firewall-subnet-a" {
     vpc_id = aws_vpc.main.id
     cidr_block = var.firewall-subnet-a
-    availability_zone = "us-east-1a"   
+    availability_zone = var.az1  
 
     tags = {
         Name = "firewall-subnet-a"
@@ -50,7 +50,7 @@ resource "aws_subnet" "firewall-subnet-a" {
 resource "aws_subnet" "firewall-subnet-b" {
     vpc_id = aws_vpc.main.id
     cidr_block = var.firewall-subnet-b
-    availability_zone = "us-east-1b"
+    availability_zone = var.az2
 
     tags = {
         Name = "firewall-subnet-b"
@@ -64,12 +64,12 @@ resource "aws_route_table" "ingress-rtb" {
 
     route {
         cidr_block = var.server-subnet-a
-        gateway_id = data.aws_vpc_endpoint.gwlbe1.id
+        vpc_endpoint_id = (aws_networkfirewall_firewall.firewall.firewall_status[0].sync_states[*].attachment[0].endpoint_id)[0]
     }
 
     route {
         cidr_block = var.server-subnet-b
-        gateway_id = data.aws_vpc_endpoint.gwlbe2.id
+        vpc_endpoint_id = (aws_networkfirewall_firewall.firewall.firewall_status[0].sync_states[*].attachment[0].endpoint_id)[1]
     }
 
     tags = {
@@ -116,13 +116,13 @@ resource "aws_route_table" "server-a-rtb" {
     # For North-South Traffic
     route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = data.aws_vpc_endpoint.gwlbe1.id
+        vpc_endpoint_id = (aws_networkfirewall_firewall.firewall.firewall_status[0].sync_states[*].attachment[0].endpoint_id)[0]
     }
 
     # For East-West Traffic
     route {
         cidr_block = var.server-subnet-b
-        gateway_id = data.aws_vpc_endpoint.gwlbe1.id
+        vpc_endpoint_id = (aws_networkfirewall_firewall.firewall.firewall_status[0].sync_states[*].attachment[0].endpoint_id)[0]
 
     }
 
@@ -145,13 +145,13 @@ resource "aws_route_table" "server-b-rtb" {
     # For North-South Traffic
     route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = data.aws_vpc_endpoint.gwlbe2.id
+        vpc_endpoint_id = (aws_networkfirewall_firewall.firewall.firewall_status[0].sync_states[*].attachment[0].endpoint_id)[1]
     }
 
     # For East-West Traffic
     route {
         cidr_block = var.server-subnet-a
-        gateway_id = data.aws_vpc_endpoint.gwlbe1.id
+        vpc_endpoint_id = (aws_networkfirewall_firewall.firewall.firewall_status[0].sync_states[*].attachment[0].endpoint_id)[0]
 
     }
 
