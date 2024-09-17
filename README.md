@@ -4,7 +4,7 @@
 
 
 ## Key Components 
-- 2 EC2 instances for East-West Traffic
+- 2 EC2 instances
 - VPC, IGW, 2 Firewall Subnets with different AZs, 2 Server Subnets with different AZs
 - Ingress Route Table, Firewall Route Table, 2 Server Route Tables
 - AWS Network Firewall, Firewall Policy, Firewall Rule Group
