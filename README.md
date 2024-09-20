@@ -1,6 +1,7 @@
 # AWS-Network-Firewall-Inspection
 
-![AWS-Network-Firewall-Inspection](https://github.com/user-attachments/assets/2cabee37-8a25-46e1-83c4-f6c9e8f4877f)
+
+![AWS-Network-Firewall-Inspection](https://github.com/user-attachments/assets/74463a2f-f154-4de4-a4d9-566ce086b2e1)
 
 
 ## Key Components 
